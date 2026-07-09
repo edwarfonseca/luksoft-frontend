@@ -7,6 +7,7 @@ import Button from '../../components/common/Button';
 import Hero from '../../components/sections/Hero';
 import FieldRenderer from '../components/FieldRenderer';
 import { useToast } from '../components/ToastProvider';
+import { navLinks } from '../../components/layout/navLinks';
 
 const SECTION_LABELS = {
   courses: 'Cursos',
@@ -45,6 +46,34 @@ const TABS = [
       { name: 'hero.ctaPrimary', label: 'Texto del botón principal', type: 'text' },
       { name: 'hero.ctaSecondary', label: 'Texto del botón secundario', type: 'text' },
       { name: 'hero.statLine', label: 'Línea de estadística destacada', type: 'text' },
+    ],
+  },
+  {
+    key: 'promo',
+    label: 'Promoción',
+    fields: [
+      { name: 'promo.enabled', label: 'Mostrar banner de promoción', type: 'checkbox' },
+      { name: 'promo.badgeText', label: 'Etiqueta (ej. "LuckSoft Day")', type: 'text' },
+      { name: 'promo.title', label: 'Mensaje principal', type: 'text' },
+      { name: 'promo.priceBefore', label: 'Precio antes (sin formato, ej. 999000)', type: 'number' },
+      { name: 'promo.priceNow', label: 'Precio ahora (sin formato, ej. 799900)', type: 'number' },
+      { name: 'promo.installments', label: 'Texto de cuotas (ej. "Paga en 4 cuotas")', type: 'text' },
+      { name: 'promo.ctaText', label: 'Texto del botón', type: 'text' },
+      {
+        name: 'promo.ctaTarget',
+        label: 'Página a la que lleva el botón',
+        type: 'select',
+        options: [{ value: '/', label: 'Inicio' }, ...navLinks.map((link) => ({ value: link.path, label: link.label }))],
+      },
+      {
+        name: 'promo.deadline',
+        label: 'Fecha y hora límite (activa el contador)',
+        type: 'datetime-local',
+        hint: 'Déjalo vacío para no mostrar contador regresivo.',
+      },
+      { name: 'promo.imageUrl', label: 'Imagen lateral (opcional)', type: 'image' },
+      { name: 'promo.backgroundColor', label: 'Color de fondo (inicio)', type: 'color' },
+      { name: 'promo.backgroundColorSecondary', label: 'Color de fondo (final)', type: 'color' },
     ],
   },
   {

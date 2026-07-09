@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../common/Button';
 import Container from '../common/Container';
-import useSectionNavigate from '../../hooks/useSectionNavigate';
 import useSettings from '../../hooks/useSettings';
 import { navLinks } from './navLinks';
 
@@ -14,10 +13,9 @@ const DARK_TOP_ROUTES = [/^\/$/, /^\/cursos\//];
  * Barra de navegación fija. Cambia de apariencia al hacer scroll
  * y colapsa en un menú móvil tipo "hamburguesa" en pantallas pequeñas.
  */
-export default function Navbar() {
+export default function Navbar({ topOffset = 0 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const goToSection = useSectionNavigate();
   const { settings } = useSettings();
   const brand = settings.brand ?? {};
   const { pathname } = useLocation();
@@ -44,16 +42,12 @@ export default function Navbar() {
     };
   }, [isMenuOpen]);
 
-  const handleNavClick = (id) => {
-    setIsMenuOpen(false);
-    goToSection(id);
-  };
-
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
         isSolid ? 'bg-white/95 shadow-md backdrop-blur-sm' : 'bg-white/0'
       }`}
+      style={{ top: topOffset }}
     >
       <Container className="flex h-18 items-center justify-between py-3">
         <Link
@@ -75,20 +69,20 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-4 xl:flex">
           {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => handleNavClick(link.id)}
+            <Link
+              key={link.path}
+              to={link.path}
               className={`whitespace-nowrap text-sm font-medium transition-colors duration-300 hover:text-secondary-400 ${
                 isSolid ? 'text-ink-600' : 'text-white/90'
               }`}
             >
               {link.label}
-            </button>
+            </Link>
           ))}
         </nav>
 
         <div className="hidden xl:block">
-          <Button variant="primary" size="md" onClick={() => handleNavClick('contacto')}>
+          <Button as={Link} to="/contacto" variant="primary" size="md">
             Inscríbete Ahora
           </Button>
         </div>
@@ -113,15 +107,16 @@ export default function Navbar() {
       >
         <Container className="flex flex-col gap-3 py-4">
           {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => handleNavClick(link.id)}
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => setIsMenuOpen(false)}
               className="rounded-lg px-2 py-2 text-left text-sm font-medium text-ink-600 hover:bg-primary-50 hover:text-primary-700"
             >
               {link.label}
-            </button>
+            </Link>
           ))}
-          <Button variant="primary" size="md" className="mt-2 w-full" onClick={() => handleNavClick('contacto')}>
+          <Button as={Link} to="/contacto" variant="primary" size="md" className="mt-2 w-full" onClick={() => setIsMenuOpen(false)}>
             Inscríbete Ahora
           </Button>
         </Container>

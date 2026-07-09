@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import Container from '../common/Container';
-import useSectionNavigate from '../../hooks/useSectionNavigate';
 import useSettings from '../../hooks/useSettings';
 import { navLinks } from './navLinks';
 
 export default function Footer() {
-  const goToSection = useSectionNavigate();
   const year = new Date().getFullYear();
   const { settings } = useSettings();
   const brand = settings.brand ?? {};
@@ -57,10 +55,10 @@ export default function Footer() {
           <h3 className="text-sm font-semibold uppercase tracking-wide text-white/60">Enlaces rápidos</h3>
           <ul className="mt-4 space-y-3 text-sm">
             {navLinks.map((link) => (
-              <li key={link.id}>
-                <button onClick={() => goToSection(link.id)} className="text-white/80 hover:text-white">
+              <li key={link.path}>
+                <Link to={link.path} className="text-white/80 hover:text-white">
                   {link.label}
-                </button>
+                </Link>
               </li>
             ))}
           </ul>

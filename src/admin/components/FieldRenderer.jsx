@@ -52,11 +52,14 @@ export default function FieldRenderer({ field, value, onChange, error }) {
   }
 
   if (field.type === 'checkbox') {
+    // Los recursos CRUD guardan 0/1 (número); las settings guardan el texto
+    // "true"/"false". Se descartan explícitamente ambas formas de "falso".
+    const isChecked = value !== undefined && value !== null && value !== false && value !== 0 && value !== '0' && value !== 'false';
     return (
       <label className={`flex items-center gap-2 ${commonProps.className ?? ''}`}>
         <input
           type="checkbox"
-          checked={Boolean(value)}
+          checked={isChecked}
           onChange={(event) => onChange(field.name, event.target.checked)}
           className="h-4 w-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
         />
@@ -142,12 +145,16 @@ export default function FieldRenderer({ field, value, onChange, error }) {
   }
 
   return (
-    <FormField
-      {...commonProps}
-      type={field.type || 'text'}
-      placeholder={field.placeholder}
-      value={value ?? ''}
-      onChange={(event) => onChange(field.name, event.target.value)}
-    />
+    <div className={commonProps.className}>
+      <FormField
+        {...commonProps}
+        className={undefined}
+        type={field.type || 'text'}
+        placeholder={field.placeholder}
+        value={value ?? ''}
+        onChange={(event) => onChange(field.name, event.target.value)}
+      />
+      <Hint text={field.hint} />
+    </div>
   );
 }

@@ -9,6 +9,7 @@ export const coursesResource = {
   columns: [
     { key: 'title', label: 'Título' },
     { key: 'ageRange', label: 'Edad' },
+    { key: 'category', label: 'Tipo' },
     { key: 'duration', label: 'Duración' },
     { key: 'featured', label: 'Destacado', type: 'boolean' },
   ],
@@ -18,6 +19,7 @@ export const coursesResource = {
     icon: '🎓',
     color: 'primary',
     ageRange: '',
+    category: '',
     duration: '',
     level: 'Principiante',
     shortDescription: '',
@@ -39,7 +41,14 @@ export const coursesResource = {
         { value: 'secondary', label: 'Ámbar (secundario)' },
       ],
     },
-    { name: 'ageRange', label: 'Rango de edad', type: 'text', placeholder: 'Ej: 7 a 9 años', required: true },
+    { name: 'ageRange', label: 'Rango de edad', type: 'text', placeholder: 'Ej: 7-9 años', required: true },
+    {
+      name: 'category',
+      label: 'Tipo de curso',
+      type: 'text',
+      placeholder: 'Ej: Programación, Robótica, Diseño de Videojuegos',
+      hint: 'Se usa como filtro en la página de Cursos.',
+    },
     { name: 'duration', label: 'Duración', type: 'text', placeholder: 'Ej: 8 semanas', required: true },
     { name: 'level', label: 'Nivel', type: 'text', placeholder: 'Ej: Principiante' },
     { name: 'shortDescription', label: 'Descripción corta (en la tarjeta)', type: 'textarea', required: true },
@@ -190,5 +199,20 @@ export const blogResource = {
     { name: 'excerpt', label: 'Resumen corto (para la tarjeta)', type: 'textarea', rows: 2 },
     { name: 'contentMarkdown', label: 'Contenido (Markdown)', type: 'markdown', required: true },
     { name: 'published', label: 'Publicar (visible en el sitio público)', type: 'checkbox' },
+  ],
+};
+
+export const ageGroupsResource = {
+  endpoint: '/age-groups',
+  label: 'Grupos de edad',
+  itemLabel: 'Grupo de edad',
+  description: 'Rangos de edad usados como filtro en /cursos, cada uno con su mensaje de ventajas.',
+  searchPlaceholder: 'Buscar por rango...',
+  orderable: true,
+  columns: [{ key: 'label', label: 'Rango de edad' }],
+  emptyItem: { label: '', advantageMessage: '' },
+  fields: [
+    { name: 'label', label: 'Rango de edad (debe coincidir con el de los cursos)', type: 'text', placeholder: 'Ej: 7-9 años', required: true },
+    { name: 'advantageMessage', label: 'Mensaje de ventajas de aprender a esta edad', type: 'textarea', rows: 3, required: true },
   ],
 };

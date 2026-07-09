@@ -6,6 +6,7 @@ import AdminLayout from './components/AdminLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import CoursesAdmin from './pages/CoursesAdmin';
+import AgeGroupsAdmin from './pages/AgeGroupsAdmin';
 import TestimonialsAdmin from './pages/TestimonialsAdmin';
 import BenefitsAdmin from './pages/BenefitsAdmin';
 import MethodologyAdmin from './pages/MethodologyAdmin';
@@ -26,6 +27,7 @@ export default function AdminApp() {
             <Route element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="cursos" element={<CoursesAdmin />} />
+              <Route path="grupos-edad" element={<AgeGroupsAdmin />} />
               <Route path="testimonios" element={<TestimonialsAdmin />} />
               <Route path="beneficios" element={<BenefitsAdmin />} />
               <Route path="metodologia" element={<MethodologyAdmin />} />

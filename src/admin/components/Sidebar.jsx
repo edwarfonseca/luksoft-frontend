@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 const links = [
   { to: '/admin', label: 'Resumen', icon: '📊', end: true },
   { to: '/admin/cursos', label: 'Cursos', icon: '🎓' },
+  { to: '/admin/grupos-edad', label: 'Grupos de edad', icon: '🎂' },
   { to: '/admin/testimonios', label: 'Testimonios', icon: '💬' },
   { to: '/admin/beneficios', label: 'Beneficios', icon: '✨' },
   { to: '/admin/metodologia', label: 'Metodología', icon: '🧭' },
