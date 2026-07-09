@@ -2,6 +2,7 @@ import Button from '../common/Button';
 import Container from '../common/Container';
 import useSectionNavigate from '../../hooks/useSectionNavigate';
 import useSettings from '../../hooks/useSettings';
+import useHtmlDoc from '../../hooks/useHtmlDoc';
 
 const floatingIcons = [
   { icon: '💻', className: 'top-2 left-2 sm:top-4 sm:left-6', delay: '0s' },
@@ -15,6 +16,7 @@ export default function Hero() {
   const goToSection = useSectionNavigate();
   const { settings } = useSettings();
   const hero = settings.hero ?? {};
+  const { html: animationHtml } = useHtmlDoc(hero.animationUrl);
 
   const bgStyle = hero.imageUrl
     ? { backgroundImage: `url(${hero.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
@@ -60,26 +62,37 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Ilustración: laptop central con íconos tecnológicos flotando alrededor */}
-        <div className="relative mx-auto flex h-72 w-72 items-center justify-center sm:h-96 sm:w-96">
-          <div className="absolute h-56 w-56 rounded-full bg-white/10 sm:h-72 sm:w-72" />
-          <div className="absolute flex h-40 w-40 items-center justify-center rounded-3xl bg-white shadow-2xl sm:h-48 sm:w-48 animate-float">
-            <span className="text-6xl sm:text-7xl" aria-hidden="true">
-              👩‍💻
-            </span>
+        {/* Ilustración: animación HTML subida desde el admin, o el gráfico estático por defecto */}
+        {animationHtml ? (
+          <div className="relative mx-auto h-72 w-72 sm:h-96 sm:w-96">
+            <iframe
+              srcDoc={animationHtml}
+              title="Animación LuckSoft"
+              className="h-full w-full border-0"
+              sandbox="allow-scripts"
+            />
           </div>
+        ) : (
+          <div className="relative mx-auto flex h-72 w-72 items-center justify-center sm:h-96 sm:w-96">
+            <div className="absolute h-56 w-56 rounded-full bg-white/10 sm:h-72 sm:w-72" />
+            <div className="absolute flex h-40 w-40 items-center justify-center rounded-3xl bg-white shadow-2xl sm:h-48 sm:w-48 animate-float">
+              <span className="text-6xl sm:text-7xl" aria-hidden="true">
+                👩‍💻
+              </span>
+            </div>
 
-          {floatingIcons.map(({ icon, className, delay }) => (
-            <span
-              key={icon}
-              className={`absolute flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-lg animate-float ${className}`}
-              style={{ animationDelay: delay }}
-              aria-hidden="true"
-            >
-              {icon}
-            </span>
-          ))}
-        </div>
+            {floatingIcons.map(({ icon, className, delay }) => (
+              <span
+                key={icon}
+                className={`absolute flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-lg animate-float ${className}`}
+                style={{ animationDelay: delay }}
+                aria-hidden="true"
+              >
+                {icon}
+              </span>
+            ))}
+          </div>
+        )}
       </Container>
     </section>
   );

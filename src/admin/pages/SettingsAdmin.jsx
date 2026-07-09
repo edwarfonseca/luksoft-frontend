@@ -38,6 +38,7 @@ const TABS = [
     label: 'Inicio (Hero)',
     fields: [
       { name: 'hero.imageUrl', label: 'Imagen de fondo (opcional)', type: 'image' },
+      { name: 'hero.animationUrl', label: 'Animación del lado derecho (.html, opcional)', type: 'html' },
       { name: 'hero.badge', label: 'Etiqueta superior', type: 'text' },
       { name: 'hero.title', label: 'Título principal', type: 'textarea', rows: 2 },
       { name: 'hero.subtitle', label: 'Subtítulo', type: 'textarea', rows: 3 },

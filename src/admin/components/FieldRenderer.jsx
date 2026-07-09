@@ -1,5 +1,6 @@
 import FormField from '../../components/common/FormField';
 import ImageUploader from './ImageUploader';
+import HtmlAnimationUploader from './HtmlAnimationUploader';
 import MarkdownEditor from './MarkdownEditor';
 
 /**
@@ -7,7 +8,7 @@ import MarkdownEditor from './MarkdownEditor';
  * generar formularios completos a partir de la configuración declarativa
  * de cada recurso (ver src/admin/config/resources.js).
  */
-const LONG_FIELD_TYPES = ['textarea', 'list', 'image'];
+const LONG_FIELD_TYPES = ['textarea', 'list', 'image', 'html'];
 
 function Hint({ text, className }) {
   if (!text) return null;
@@ -27,6 +28,14 @@ export default function FieldRenderer({ field, value, onChange, error }) {
     return (
       <div className={commonProps.className}>
         <ImageUploader label={field.label} value={value} onChange={(url) => onChange(field.name, url)} />
+      </div>
+    );
+  }
+
+  if (field.type === 'html') {
+    return (
+      <div className={commonProps.className}>
+        <HtmlAnimationUploader label={field.label} value={value} onChange={(url) => onChange(field.name, url)} />
       </div>
     );
   }

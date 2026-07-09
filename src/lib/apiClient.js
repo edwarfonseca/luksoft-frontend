@@ -14,17 +14,28 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
   const token = tokenStore.get();
   if (token) authHeaders['Authorization'] = `Bearer ${token}`;
 
+  const finalHeaders = isFormData
+    ? { ...authHeaders, ...headers }
+    : { 'Content-Type': 'application/json', ...authHeaders, ...headers };
+
+  // eslint-disable-next-line no-console
+  console.log('[DEBUG apiClient] →', method, `${BASE}${path}`, {
+    tokenEnSessionStorage: token,
+    headersEnviados: finalHeaders,
+    body: isFormData ? '(FormData)' : body,
+  });
+
   const res = await fetch(`${BASE}${path}`, {
     method,
     credentials: 'include',
-    headers: isFormData
-      ? { ...authHeaders, ...headers }
-      : { 'Content-Type': 'application/json', ...authHeaders, ...headers },
+    headers: finalHeaders,
     body: isFormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
   });
 
   if (!res.ok) {
     const payload = await res.json().catch(() => ({}));
+    // eslint-disable-next-line no-console
+    console.log('[DEBUG apiClient] ← ERROR', res.status, path, payload);
     throw new Error(payload.error || `Error ${res.status}`);
   }
   if (res.status === 204) return null;
