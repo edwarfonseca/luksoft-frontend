@@ -21,14 +21,8 @@ export function AuthProvider({ children }) {
   }, [refresh]);
 
   const login = useCallback(async (username, password) => {
-    // eslint-disable-next-line no-console
-    console.log('[DEBUG login] credenciales enviadas:', { username, password });
     const current = await apiClient.post('/auth/login', { username, password });
-    // eslint-disable-next-line no-console
-    console.log('[DEBUG login] respuesta del servidor:', current);
     if (current.token) tokenStore.set(current.token);
-    // eslint-disable-next-line no-console
-    console.log('[DEBUG login] token guardado en sessionStorage:', tokenStore.get());
     setUser({ id: current.id, username: current.username });
     return current;
   }, []);
