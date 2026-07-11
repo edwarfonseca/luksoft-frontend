@@ -13,6 +13,7 @@ const links = [
   { to: '/admin/faq', label: 'Preguntas Frecuentes', icon: '❓' },
   { to: '/admin/leads', label: 'Leads / Solicitudes', icon: '📋' },
   { to: '/admin/configuracion', label: 'Configuración', icon: '⚙️' },
+  { to: '/admin/cuenta', label: 'Mi cuenta', icon: '🔐' },
 ];
 
 export default function Sidebar() {

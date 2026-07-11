@@ -4,6 +4,8 @@ import { ToastProvider } from './components/ToastProvider';
 import AuthGuard from './components/AuthGuard';
 import AdminLayout from './components/AdminLayout';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import CoursesAdmin from './pages/CoursesAdmin';
 import AgeGroupsAdmin from './pages/AgeGroupsAdmin';
@@ -16,6 +18,7 @@ import BlogAdmin from './pages/BlogAdmin';
 import FaqsAdmin from './pages/FaqsAdmin';
 import SettingsAdmin from './pages/SettingsAdmin';
 import LeadsAdmin from './pages/LeadsAdmin';
+import AccountAdmin from './pages/AccountAdmin';
 
 export default function AdminApp() {
   return (
@@ -23,6 +26,8 @@ export default function AdminApp() {
       <ToastProvider>
         <Routes>
           <Route path="login" element={<Login />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
           <Route element={<AuthGuard />}>
             <Route element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
@@ -37,6 +42,7 @@ export default function AdminApp() {
               <Route path="faq" element={<FaqsAdmin />} />
               <Route path="leads" element={<LeadsAdmin />} />
               <Route path="configuracion" element={<SettingsAdmin />} />
+              <Route path="cuenta" element={<AccountAdmin />} />
             </Route>
           </Route>
         </Routes>

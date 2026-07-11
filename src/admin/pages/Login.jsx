@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/common/Button';
 import FormField from '../../components/common/FormField';
 import { useAuth } from '../hooks/useAuth';
@@ -69,6 +69,10 @@ export default function Login() {
             {isSubmitting ? 'Ingresando...' : 'Ingresar'}
           </Button>
         </form>
+
+        <Link to="/admin/forgot-password" className="mt-4 inline-block text-sm text-primary-600 hover:underline">
+          ¿Olvidaste tu contraseña?
+        </Link>
       </div>
     </div>
   );
