@@ -11,6 +11,8 @@ export default function Benefits() {
   const { settings } = useSettings();
   const section = settings.section?.benefits ?? {};
 
+  if (!isLoading && benefits.length === 0) return null;
+
   return (
     <section className="bg-ink-50 py-20 sm:py-28">
       <Container>

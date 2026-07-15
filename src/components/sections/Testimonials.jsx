@@ -33,6 +33,8 @@ export default function Testimonials() {
     return () => clearInterval(timer);
   }, [isPaused, goNext, testimonials.length]);
 
+  if (!isLoading && testimonials.length === 0) return null;
+
   return (
     <section id="testimonios" className="bg-ink-50 py-20 sm:py-28">
       <Container>

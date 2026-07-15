@@ -10,6 +10,8 @@ export default function Methodology() {
   const { settings } = useSettings();
   const section = settings.section?.methodology ?? {};
 
+  if (!isLoading && steps.length === 0) return null;
+
   return (
     <section id="metodologia" className="bg-white py-20 sm:py-28">
       <Container>

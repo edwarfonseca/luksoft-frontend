@@ -69,6 +69,16 @@ export default function CourseDetail() {
               <Badge icon="📈" tone="neutral">
                 Nivel {course.level}
               </Badge>
+              {!!course.totalSessions && (
+                <Badge icon="🗓️" tone="neutral">
+                  {course.totalSessions} clases
+                </Badge>
+              )}
+              {!!course.sessionLength && (
+                <Badge icon="⏳" tone="neutral">
+                  {course.sessionLength} por clase
+                </Badge>
+              )}
             </div>
 
             <Button variant="primary" size="lg" className="mt-8" onClick={handleEnroll}>
@@ -113,6 +123,57 @@ export default function CourseDetail() {
           </div>
         </Container>
       </section>
+
+      {course.syllabus?.length > 0 && (
+        <section className="bg-ink-50 py-16">
+          <Container>
+            <h2 className="text-xl font-semibold text-ink-900">Plan de estudio</h2>
+            <p className="mt-2 text-sm text-ink-600">
+              Un recorrido paso a paso, unidad por unidad, para que el aprendizaje avance con sentido.
+            </p>
+            <ol className="mt-8 space-y-4">
+              {course.syllabus.map((item, index) => (
+                <li key={item} className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-ink-100">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
+                    {index + 1}
+                  </span>
+                  <p className="text-sm text-ink-700">{item}</p>
+                </li>
+              ))}
+            </ol>
+          </Container>
+        </section>
+      )}
+
+      {(course.badges?.length > 0 || !!course.totalXp) && (
+        <section className="bg-white py-16">
+          <Container>
+            <h2 className="text-xl font-semibold text-ink-900">Insignias que desbloqueará</h2>
+            <p className="mt-2 text-sm text-ink-600">
+              Cada logro se celebra con una insignia y puntos de experiencia (XP), manteniendo la motivación alta
+              de principio a fin.
+              {!!course.totalXp && (
+                <>
+                  {' '}
+                  En total, puede acumular <span className="font-semibold text-primary-600">+{course.totalXp} XP</span>.
+                </>
+              )}
+            </p>
+            {course.badges?.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-3">
+                {course.badges.map((badge) => (
+                  <span
+                    key={badge}
+                    className="inline-flex items-center rounded-2xl bg-secondary-400/15 px-4 py-2 text-sm font-medium text-secondary-700"
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            )}
+          </Container>
+        </section>
+      )}
     </article>
   );
 }

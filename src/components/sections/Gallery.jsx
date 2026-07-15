@@ -14,6 +14,8 @@ export default function Gallery() {
   const { settings } = useSettings();
   const section = settings.section?.galeria ?? {};
 
+  if (!isLoading && items.length === 0) return null;
+
   return (
     <section id="galeria" className="bg-white py-20 sm:py-28">
       <Container>

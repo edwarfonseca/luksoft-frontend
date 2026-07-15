@@ -13,6 +13,8 @@ export default function BlogTeaser() {
   const { settings } = useSettings();
   const section = settings.section?.blog ?? {};
 
+  if (!isLoading && posts.length === 0) return null;
+
   return (
     <section id="blog" className="bg-ink-50 py-20 sm:py-28">
       <Container>
@@ -27,8 +29,6 @@ export default function BlogTeaser() {
 
         {isLoading ? (
           <SectionLoading label="Cargando publicaciones..." />
-        ) : posts.length === 0 ? (
-          <p className="text-center text-sm text-ink-500">Muy pronto compartiremos nuestras primeras noticias.</p>
         ) : (
           <>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">

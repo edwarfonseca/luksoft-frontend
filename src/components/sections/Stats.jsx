@@ -10,6 +10,8 @@ export default function Stats() {
   const { settings } = useSettings();
   const section = settings.section?.experiencia ?? {};
 
+  if (!isLoading && stats.length === 0) return null;
+
   return (
     <section id="experiencia" className="bg-gradient-to-r from-primary-700 to-primary-500 py-20 sm:py-24">
       <Container>

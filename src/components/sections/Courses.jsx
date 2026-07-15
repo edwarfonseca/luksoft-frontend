@@ -11,6 +11,8 @@ export default function Courses() {
   const { settings } = useSettings();
   const section = settings.section?.courses ?? {};
 
+  if (!isLoading && courses.length === 0) return null;
+
   return (
     <section id="cursos" className="bg-white py-20 sm:py-28">
       <Container>

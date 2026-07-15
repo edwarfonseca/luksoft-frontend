@@ -16,6 +16,8 @@ export default function Faq() {
     setOpenIndex((current) => (current === index ? -1 : index));
   };
 
+  if (!isLoading && faqs.length === 0) return null;
+
   return (
     <section id="faq" className="bg-white py-20 sm:py-28">
       <Container className="max-w-3xl">

@@ -52,33 +52,35 @@ export default function FormModal({ open, title, fields, initialValues, onSubmit
 
   return (
     <div
-      className="fixed inset-0 z-[150] flex items-center justify-center overflow-y-auto bg-ink-900/50 p-4"
+      className="fixed inset-0 z-[150] overflow-y-auto bg-ink-900/50 p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
-      <div className="my-8 w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl" onClick={(event) => event.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-ink-900">{title}</h3>
-        <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
-          {fields.map((field) => (
-            <FieldRenderer
-              key={field.name}
-              field={field}
-              value={values[field.name]}
-              onChange={handleChange}
-              error={errors[field.name]}
-            />
-          ))}
+      <div className="flex min-h-full items-center justify-center">
+        <div className="my-8 w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl" onClick={(event) => event.stopPropagation()}>
+          <h3 className="text-lg font-semibold text-ink-900">{title}</h3>
+          <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
+            {fields.map((field) => (
+              <FieldRenderer
+                key={field.name}
+                field={field}
+                value={values[field.name]}
+                onChange={handleChange}
+                error={errors[field.name]}
+              />
+            ))}
 
-          <div className="mt-2 flex justify-end gap-3 sm:col-span-2">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button type="submit" variant="primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Guardando...' : 'Guardar'}
-            </Button>
-          </div>
-        </form>
+            <div className="mt-2 flex justify-end gap-3 sm:col-span-2">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button type="submit" variant="primary" disabled={isSubmitting}>
+                {isSubmitting ? 'Guardando...' : 'Guardar'}
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
