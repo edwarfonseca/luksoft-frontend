@@ -1,5 +1,6 @@
 const BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '') + '/api';
 const TOKEN_KEY = 'LuckSoft_token';
+export const AUTH_EXPIRED_EVENT = 'LuckSoft:auth-expired';
 
 export const tokenStore = {
   get: () => { try { return sessionStorage.getItem(TOKEN_KEY); } catch { return null; } },
@@ -27,6 +28,10 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
 
   if (!res.ok) {
     const payload = await res.json().catch(() => ({}));
+    if (res.status === 401) {
+      tokenStore.clear();
+      window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+    }
     throw new Error(payload.error || `Error ${res.status}`);
   }
   if (res.status === 204) return null;

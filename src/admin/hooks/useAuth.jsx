@@ -1,7 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { apiClient, tokenStore } from '../../lib/apiClient';
+import { AUTH_EXPIRED_EVENT, apiClient, tokenStore } from '../../lib/apiClient';
 
 const AuthContext = createContext(null);
+
+// Cada cuánto se revalida la sesión en segundo plano, para detectar la
+// expiración del token (1h) aunque el usuario no dispare ninguna petición.
+const SESSION_CHECK_INTERVAL_MS = 5 * 60 * 1000;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -18,6 +22,19 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     refresh();
+  }, [refresh]);
+
+  // Si el token expira (401 en cualquier petición) o pasa el intervalo de
+  // chequeo, cierra la sesión para que el AuthGuard redirija al login.
+  useEffect(() => {
+    const handleExpired = () => setUser(null);
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleExpired);
+
+    const interval = setInterval(refresh, SESSION_CHECK_INTERVAL_MS);
+    return () => {
+      window.removeEventListener(AUTH_EXPIRED_EVENT, handleExpired);
+      clearInterval(interval);
+    };
   }, [refresh]);
 
   const login = useCallback(async (username, password) => {
