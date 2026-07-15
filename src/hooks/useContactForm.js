@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { apiClient } from '../lib/apiClient';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[+]?[\d\s-]{7,15}$/;
+const PHONE_DIGITS_REGEX = /^\d{6,12}$/;
 
 const INITIAL_VALUES = {
   nombre: '',
   email: '',
+  codigoPais: '+57',
   telefono: '',
   curso: '',
   mensaje: '',
@@ -21,8 +22,8 @@ function validate(values) {
   if (!EMAIL_REGEX.test(values.email.trim())) {
     errors.email = 'Ingresa un correo electrónico válido.';
   }
-  if (!PHONE_REGEX.test(values.telefono.trim())) {
-    errors.telefono = 'Ingresa un teléfono válido (mínimo 7 dígitos).';
+  if (!PHONE_DIGITS_REGEX.test(values.telefono.trim())) {
+    errors.telefono = 'Ingresa un teléfono válido (solo números, 6 a 12 dígitos).';
   }
   if (!values.curso) {
     errors.curso = 'Selecciona un curso de interés.';
@@ -55,7 +56,8 @@ export default function useContactForm(initialCourse = '') {
     setStatus('submitting');
 
     try {
-      await apiClient.post('/contact', values);
+      const telefono = `${values.codigoPais}${values.telefono.trim()}`;
+      await apiClient.post('/contact', { ...values, telefono });
       setStatus('success');
       setValues(INITIAL_VALUES);
     } catch {

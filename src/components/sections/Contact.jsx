@@ -7,6 +7,19 @@ import useContactForm from '../../hooks/useContactForm';
 import useCourses from '../../hooks/useCourses';
 import useSettings from '../../hooks/useSettings';
 
+const COUNTRY_CODES = [
+  { value: '+57', label: '🇨🇴 +57' },
+  { value: '+52', label: '🇲🇽 +52' },
+  { value: '+54', label: '🇦🇷 +54' },
+  { value: '+56', label: '🇨🇱 +56' },
+  { value: '+51', label: '🇵🇪 +51' },
+  { value: '+593', label: '🇪🇨 +593' },
+  { value: '+58', label: '🇻🇪 +58' },
+  { value: '+55', label: '🇧🇷 +55' },
+  { value: '+1', label: '🇺🇸 +1' },
+  { value: '+34', label: '🇪🇸 +34' },
+];
+
 export default function Contact() {
   const location = useLocation();
   const preselectedCourse = location.state?.selectedCourse ?? '';
@@ -97,16 +110,36 @@ export default function Contact() {
                   error={errors.email}
                   className="sm:col-span-1"
                 />
-                <FormField
-                  label="Teléfono"
-                  name="telefono"
-                  type="tel"
-                  placeholder="+57 300 123 4567"
-                  value={values.telefono}
-                  onChange={handleChange}
-                  error={errors.telefono}
-                  className="sm:col-span-1"
-                />
+                <label className="block sm:col-span-1">
+                  <span className="mb-1.5 block text-sm font-medium text-ink-700">Teléfono</span>
+                  <div className="flex gap-2">
+                    <select
+                      name="codigoPais"
+                      value={values.codigoPais}
+                      onChange={handleChange}
+                      aria-label="Código de país"
+                      className="w-24 rounded-xl border border-ink-100 bg-white px-2 py-2.5 text-sm text-ink-800 outline-none transition-colors focus:border-primary-500"
+                    >
+                      {COUNTRY_CODES.map((code) => (
+                        <option key={code.value} value={code.value}>
+                          {code.label}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      name="telefono"
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="300 123 4567"
+                      value={values.telefono}
+                      onChange={handleChange}
+                      className={`w-full rounded-xl border bg-white px-4 py-2.5 text-sm text-ink-800 outline-none transition-colors focus:border-primary-500 ${
+                        errors.telefono ? 'border-red-400' : 'border-ink-100'
+                      }`}
+                    />
+                  </div>
+                  {errors.telefono && <span className="mt-1 block text-xs text-red-500">{errors.telefono}</span>}
+                </label>
                 <FormField
                   as="select"
                   label="Curso de interés"

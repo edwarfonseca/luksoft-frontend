@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import useSettings from '../../hooks/useSettings';
 import useCountdown from '../../hooks/useCountdown';
 
-const DISMISS_KEY = 'LuckSoft_promo_dismissed';
-
 function formatPrice(value) {
   const n = Number(value);
   if (!Number.isFinite(n) || n <= 0) return null;
@@ -14,27 +12,21 @@ function formatPrice(value) {
 /**
  * Banner de promoción/descuento en la parte superior del sitio (estilo
  * "Platzi Day"), editable desde el admin (Configuración > Promoción).
- * Si el admin cambia la promoción, el "signature" cambia y el banner
- * vuelve a mostrarse aunque el usuario haya cerrado uno anterior.
+ * Cerrarlo solo lo oculta para la vista actual: al refrescar la pestaña
+ * vuelve a aparecer mientras la promoción siga activa.
  */
 const PromoBanner = forwardRef(function PromoBanner(_props, ref) {
   const { settings } = useSettings();
   const promo = settings.promo ?? {};
   const isEnabled = promo.enabled === 'true' && Boolean(promo.title);
 
-  const signature = [promo.title, promo.priceNow, promo.deadline].join('|');
-  const [dismissedSignature, setDismissedSignature] = useState(() => {
-    try { return localStorage.getItem(DISMISS_KEY) ?? ''; } catch { return ''; }
-  });
+  const [isDismissed, setIsDismissed] = useState(false);
 
   const countdown = useCountdown(promo.deadline);
   const hasDeadline = Boolean(promo.deadline);
-  const isVisible = isEnabled && dismissedSignature !== signature && !(hasDeadline && countdown.isExpired);
+  const isVisible = isEnabled && !isDismissed && !(hasDeadline && countdown.isExpired);
 
-  const handleClose = () => {
-    try { localStorage.setItem(DISMISS_KEY, signature); } catch { /* noop */ }
-    setDismissedSignature(signature);
-  };
+  const handleClose = () => setIsDismissed(true);
 
   if (!isVisible) return <div ref={ref} />;
 
