@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from '../common/Button';
 import Container from '../common/Container';
+import BrandLogo from './BrandLogo';
 import useSettings from '../../hooks/useSettings';
 import { navLinks } from './navLinks';
 
@@ -57,14 +58,8 @@ export default function Navbar({ topOffset = 0 }) {
           }`}
           onClick={() => setIsMenuOpen(false)}
         >
-          {brand.logoUrl ? (
-            <img src={brand.logoUrl} alt={brand.siteName || 'LuckSoft'} className="h-8 w-8 rounded-lg object-cover" />
-          ) : (
-            <span className="text-2xl" aria-hidden="true">
-              🚀
-            </span>
-          )}
-          {brand.siteName || 'LuckSoft'}
+          <BrandLogo brand={brand} />
+          {brand.siteName || 'LuckSoft Academy'}
         </Link>
 
         <nav className="hidden items-center gap-4 xl:flex">

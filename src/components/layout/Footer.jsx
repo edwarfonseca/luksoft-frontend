@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Container from '../common/Container';
+import BrandLogo from './BrandLogo';
 import useSettings from '../../hooks/useSettings';
 import { navLinks } from './navLinks';
 
@@ -22,14 +23,8 @@ export default function Footer() {
       <Container className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link to="/" className="flex items-center gap-2 text-xl font-bold">
-            {brand.logoUrl ? (
-              <img src={brand.logoUrl} alt={brand.siteName || 'LuckSoft'} className="h-8 w-8 rounded-lg object-cover" />
-            ) : (
-              <span className="text-2xl" aria-hidden="true">
-                🚀
-              </span>
-            )}
-            {brand.siteName || 'LuckSoft'}
+            <BrandLogo brand={brand} />
+            {brand.siteName || 'LuckSoft Academy'}
           </Link>
           <p className="mt-4 text-sm text-white/70">
             {brand.footerTagline ||
@@ -94,7 +89,7 @@ export default function Footer() {
       <div className="border-t border-white/10 py-6">
         <Container className="flex flex-col items-center justify-between gap-2 text-xs text-white/60 sm:flex-row">
           <p>
-            © {year} {brand.siteName || 'LuckSoft'}. Todos los derechos reservados.
+            © {year} {brand.siteName || 'LuckSoft Academy'}. Todos los derechos reservados.
           </p>
           <p>{brand.footerCredit || 'Hecho con 💙 para las próximas generaciones de creadores digitales.'}</p>
         </Container>
