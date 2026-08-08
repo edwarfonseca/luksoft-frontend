@@ -5,6 +5,7 @@ import Button from '../components/common/Button';
 import SectionLoading from '../components/common/SectionLoading';
 import CourseImage from '../components/courses/CourseImage';
 import { useCourseBySlug } from '../hooks/useCourses';
+import { getCourseTrialUrl } from '../lib/courseTrial';
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -37,6 +38,8 @@ export default function CourseDetail() {
   const handleEnroll = () => {
     navigate('/', { state: { scrollTo: 'contacto', selectedCourse: course.slug } });
   };
+
+  const trialUrl = getCourseTrialUrl(course.slug);
 
   return (
     <article className="pt-24">
@@ -81,9 +84,16 @@ export default function CourseDetail() {
               )}
             </div>
 
-            <Button variant="primary" size="lg" className="mt-8" onClick={handleEnroll}>
-              Inscribirme en este curso
-            </Button>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button variant="primary" size="lg" onClick={handleEnroll}>
+                Inscribirme en este curso
+              </Button>
+              {trialUrl && (
+                <Button as="a" href={trialUrl} target="_blank" rel="noopener noreferrer" variant="ghost" size="lg">
+                  🧪 Prueba una clase gratis
+                </Button>
+              )}
+            </div>
           </div>
         </Container>
       </section>

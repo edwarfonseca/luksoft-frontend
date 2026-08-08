@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Badge from '../common/Badge';
 import CourseImage from './CourseImage';
+import { getCourseTrialUrl } from '../../lib/courseTrial';
 
 /**
  * Tarjeta de curso usada en la grilla de la sección "Cursos".
@@ -8,6 +9,8 @@ import CourseImage from './CourseImage';
  * de detalle para más información.
  */
 export default function CourseCard({ course }) {
+  const trialUrl = getCourseTrialUrl(course.slug);
+
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-md ring-1 ring-ink-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
       {course.featured && (
@@ -43,6 +46,17 @@ export default function CourseCard({ course }) {
             →
           </span>
         </Link>
+
+        {trialUrl && (
+          <a
+            href={trialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-secondary-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 hover:bg-secondary-600"
+          >
+            🧪 Prueba una clase gratis
+          </a>
+        )}
       </div>
     </article>
   );
