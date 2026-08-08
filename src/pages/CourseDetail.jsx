@@ -36,7 +36,7 @@ export default function CourseDetail() {
   }
 
   const handleEnroll = () => {
-    navigate('/', { state: { scrollTo: 'contacto', selectedCourse: course.slug } });
+    navigate('/contacto', { state: { selectedCourse: course.slug } });
   };
 
   const trialUrl = getCourseTrialUrl(course.slug);
@@ -90,7 +90,7 @@ export default function CourseDetail() {
               </Button>
               {trialUrl && (
                 <Button as="a" href={trialUrl} target="_blank" rel="noopener noreferrer" variant="ghost" size="lg">
-                  🧪 Prueba una clase gratis
+                  🧪 Laboratorio de Prueba
                 </Button>
               )}
             </div>
