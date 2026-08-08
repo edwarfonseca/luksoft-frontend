@@ -28,8 +28,8 @@ function validate(values) {
   if (!values.curso) {
     errors.curso = 'Selecciona un curso de interés.';
   }
-  if (!values.mensaje.trim() || values.mensaje.trim().length < 10) {
-    errors.mensaje = 'Cuéntanos un poco más (mínimo 10 caracteres).';
+  if (values.mensaje.trim() && values.mensaje.trim().length < 10) {
+    errors.mensaje = 'Cuéntanos un poco más (mínimo 10 caracteres) o deja el campo vacío.';
   }
 
   return errors;

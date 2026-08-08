@@ -159,7 +159,7 @@ export default function Contact() {
                 </FormField>
                 <FormField
                   as="textarea"
-                  label="Mensaje"
+                  label="Mensaje (opcional)"
                   name="mensaje"
                   rows={4}
                   placeholder="Cuéntanos la edad e intereses de tu hijo o hija..."
