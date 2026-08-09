@@ -11,7 +11,7 @@ const links = [
   { to: '/admin/galeria', label: 'Galería', icon: '🖼️' },
   { to: '/admin/blog', label: 'Blog', icon: '📰' },
   { to: '/admin/faq', label: 'Preguntas Frecuentes', icon: '❓' },
-  { to: '/admin/leads', label: 'Leads / Solicitudes', icon: '📋' },
+  { to: '/admin/leads', label: 'Solicitudes', icon: '📊' },
   { to: '/admin/configuracion', label: 'Configuración', icon: '⚙️' },
   { to: '/admin/cuenta', label: 'Mi cuenta', icon: '🔐' },
 ];
