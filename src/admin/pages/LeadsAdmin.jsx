@@ -1,10 +1,15 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { apiClient } from '../../lib/apiClient';
 
+// Mismas categorías que el panel de WhatsApp (whatsapp-admin: pestañas
+// "Nuevas solicitudes" / "Pendientes" / "Cerradas") — el estado real de cada
+// solicitud vive en su conversación de WhatsApp, no en `leads.status`, así
+// que ambos paneles cuentan y llaman el estado exactamente igual.
 const STATUS_CONFIG = {
-  pendiente:     { label: 'Pendiente',      bg: 'bg-amber-100',  text: 'text-amber-800', bar: 'bg-amber-400' },
-  contactado:    { label: 'Contactado',     bg: 'bg-green-100',  text: 'text-green-800', bar: 'bg-green-500' },
-  no_interesado: { label: 'No interesado',  bg: 'bg-slate-100',  text: 'text-slate-600', bar: 'bg-slate-300' },
+  nuevas:           { label: 'Nuevas solicitudes', bg: 'bg-amber-100',  text: 'text-amber-800', bar: 'bg-amber-400' },
+  pendientes:       { label: 'Pendientes',          bg: 'bg-primary-50', text: 'text-primary-700', bar: 'bg-primary-500' },
+  cerradas:         { label: 'Cerradas',            bg: 'bg-slate-100',  text: 'text-slate-600', bar: 'bg-slate-300' },
+  sin_conversacion: { label: 'Sin conversación de WhatsApp', bg: 'bg-ink-100', text: 'text-ink-500', bar: 'bg-ink-200' },
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -28,7 +33,7 @@ function buildStats(leads) {
 
   const byCurso = new Map();
   const byDate  = new Map();
-  const byStatus = { pendiente: 0, contactado: 0, no_interesado: 0 };
+  const byStatus = { nuevas: 0, pendientes: 0, cerradas: 0, sin_conversacion: 0 };
 
   for (const lead of leads) {
     const cursoLabel = lead.curso_title || lead.curso || 'Sin especificar';
@@ -37,8 +42,9 @@ function buildStats(leads) {
     const key = dateKey(lead.created_at);
     byDate.set(key, (byDate.get(key) || 0) + 1);
 
-    if (byStatus[lead.status] === undefined) byStatus[lead.status] = 0;
-    byStatus[lead.status] += 1;
+    const conversationStatus = lead.conversationStatus ?? 'sin_conversacion';
+    if (byStatus[conversationStatus] === undefined) byStatus[conversationStatus] = 0;
+    byStatus[conversationStatus] += 1;
   }
 
   const cursoStats = [...byCurso.entries()]
@@ -60,9 +66,9 @@ function buildStats(leads) {
   }).length;
   const weekDelta = last7 - prev7;
 
-  const contactRate = total ? Math.round((byStatus.contactado / total) * 100) : 0;
+  const attentionRate = total ? Math.round(((byStatus.pendientes + byStatus.cerradas) / total) * 100) : 0;
 
-  return { total, cursoStats, dateStats, byStatus, peakDate, topCurso, last7, weekDelta, contactRate };
+  return { total, cursoStats, dateStats, byStatus, peakDate, topCurso, last7, weekDelta, attentionRate };
 }
 
 function StatTile({ label, value, hint }) {
@@ -152,29 +158,31 @@ function DateBarChart({ data, peakDate }) {
 }
 
 function StatusBreakdown({ byStatus, total }) {
-  const entries = Object.entries(STATUS_CONFIG);
+  const segments = Object.entries(STATUS_CONFIG)
+    .map(([key, cfg]) => ({ key, cfg, count: byStatus[key] || 0, pct: total ? ((byStatus[key] || 0) / total) * 100 : 0 }))
+    .filter((s) => s.pct > 0);
+  // "sin_conversacion" es un diagnóstico de datos (solicitudes previas a la
+  // integración con WhatsApp), no un estado real del flujo — solo se muestra
+  // en la leyenda cuando de verdad hay alguna.
+  const legendEntries = Object.entries(STATUS_CONFIG).filter(([key]) => key !== 'sin_conversacion' || (byStatus[key] || 0) > 0);
+
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-ink-100">
       <h2 className="text-sm font-semibold text-ink-900">Estado de las solicitudes</h2>
 
       <div className="mt-4 flex h-4 w-full overflow-hidden rounded-full bg-ink-50">
-        {entries.map(([key, cfg], i) => {
-          const count = byStatus[key] || 0;
-          const pct   = total ? (count / total) * 100 : 0;
-          if (!pct) return null;
-          return (
-            <div
-              key={key}
-              className={`${cfg.bar} h-full ${i > 0 ? 'ml-0.5' : ''}`}
-              style={{ width: `${pct}%` }}
-              title={`${cfg.label}: ${count}`}
-            />
-          );
-        })}
+        {segments.map(({ key, cfg, count, pct }, i) => (
+          <div
+            key={key}
+            className={`${cfg.bar} h-full ${i > 0 ? 'ml-0.5' : ''}`}
+            style={{ width: `${pct}%` }}
+            title={`${cfg.label}: ${count}`}
+          />
+        ))}
       </div>
 
       <ul className="mt-4 space-y-2">
-        {entries.map(([key, cfg]) => (
+        {legendEntries.map(([key, cfg]) => (
           <li key={key} className="flex items-center justify-between text-sm">
             <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${cfg.bg} ${cfg.text}`}>
               {cfg.label}
@@ -263,7 +271,7 @@ export default function LeadsAdmin() {
       l.telefono,
       l.curso_title || l.curso,
       `"${l.mensaje.replace(/"/g, '""')}"`,
-      l.status,
+      STATUS_CONFIG[l.conversationStatus]?.label ?? l.conversationStatus,
       `"${(l.notes || '').replace(/"/g, '""')}"`,
     ]);
     const csv  = [headers, ...rows].map((r) => r.join(',')).join('\n');
@@ -338,9 +346,9 @@ export default function LeadsAdmin() {
               hint={`${stats.last7} en los últimos 7 días (${stats.weekDelta >= 0 ? '+' : ''}${stats.weekDelta} vs. semana anterior)`}
             />
             <StatTile
-              label="Pendientes por contactar"
-              value={compactNumber(stats.byStatus.pendiente || 0)}
-              hint="Estado inicial de cada solicitud"
+              label="Nuevas por contactar"
+              value={compactNumber(stats.byStatus.nuevas || 0)}
+              hint="Sin asesor asignado en WhatsApp"
             />
             <StatTile
               label="Curso más solicitado"
@@ -348,9 +356,9 @@ export default function LeadsAdmin() {
               hint={stats.topCurso ? `${stats.topCurso.count} solicitudes` : undefined}
             />
             <StatTile
-              label="Tasa de contacto"
-              value={`${stats.contactRate}%`}
-              hint="Solicitudes marcadas como contactadas"
+              label="Tasa de atención"
+              value={`${stats.attentionRate}%`}
+              hint="Solicitudes ya tomadas por un asesor en WhatsApp"
             />
           </div>
 
